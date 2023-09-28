@@ -125,7 +125,7 @@ class Trainer():
                     sr = self.model(lr, idx_scale)
 
                 # run a second time to record inference time
-                for idx_img, (lr, hr, filename, _) in enumerate(self.loader_test):
+                for idx_img, (lr, hr, filename) in enumerate(self.loader_test):
                     filename = filename[0]
                     no_eval = (hr.nelement() == 1)
                     if not no_eval:

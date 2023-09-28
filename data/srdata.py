@@ -97,7 +97,7 @@ class SRData(data.Dataset):
             for si, s in enumerate(self.scale):
                 names_lr[si].append(os.path.join(
                     self.dir_lr, 'x{}/{}x{}{}'.format(
-                        s, filename, s, self.ext[1]
+                        int(s), filename, int(s), self.ext[1]
                     )
                 ))
 
@@ -201,6 +201,7 @@ class SRData(data.Dataset):
                 lr, hr = common.augment(lr, hr)
         else:
             ih, iw = lr.shape[:2]
+            scale = int(scale)
             hr = hr[0:ih * scale, 0:iw * scale]
 
         return lr, hr

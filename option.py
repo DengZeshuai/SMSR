@@ -19,7 +19,7 @@ parser.add_argument('--seed', type=int, default=1,
                     help='random seed')
 
 # Data specifications
-parser.add_argument('--dir_data', type=str, default='/mnt/cephfs/dataset/sr',
+parser.add_argument('--dir_data', type=str, default='/home/dengzeshuai/datasets',
                     help='dataset directory')
 parser.add_argument('--dir_demo', type=str, default='../test',
                     help='demo image directory')
@@ -133,9 +133,9 @@ args = parser.parse_args()
 template.set_template(args)
 
 if args.scale=='':
-    args.scale = [2.0]
+    args.scale = [2]
 else:
-    args.scale = list(map(lambda x: float(x), args.scale.split('+')))
+    args.scale = list(map(lambda x: int(x), args.scale.split('+')))
 
 if args.epochs == 0:
     args.epochs = 1e8

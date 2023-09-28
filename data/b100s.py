@@ -1,9 +1,7 @@
 import os
 
 from data import common
-# from data import multiscalesrdata as srdata
 from data import srdata as srdata
-
 import torch.utils.data as data
 
 class Benchmark(srdata.SRData):

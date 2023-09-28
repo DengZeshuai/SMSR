@@ -10,7 +10,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import numpy as np
-import scipy.misc as misc
+# import scipy.misc as misc
+import imageio
 import cv2
 import torch
 import torch.optim as optim
@@ -126,7 +127,7 @@ class checkpoint():
 
         normalized = save_list[0][0].data.mul(255 / self.args.rgb_range)
         ndarr = normalized.byte().permute(1, 2, 0).cpu().numpy()
-        misc.imsave('{}{}.png'.format(filename, 'SR'), ndarr)
+        imageio.imsave('{}{}.png'.format(filename, 'SR'), ndarr)
 
         # postfix = ('SR', 'LR', 'HR')
         # for v, p in zip(save_list, postfix):
