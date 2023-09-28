@@ -26,21 +26,22 @@ class Trainer():
         self.error_last = 1e8
 
     def train(self):
-        self.scheduler.step()
+        # self.scheduler.step()
         self.loss.step()
         epoch = self.scheduler.last_epoch + 1
+        lr = self.optimizer.get_lr()
 
         # lr schedule
-        lr = self.args.lr * (2 ** -(epoch // 200))
-        for param_group in self.optimizer.param_groups:
-            param_group['lr'] = lr
+        # lr = self.args.lr * (2 ** -(epoch // 200))
+        # for param_group in self.optimizer.param_groups:
+        #     param_group['lr'] = lr
 
         self.ckp.write_log('[Epoch {}]\tLearning rate: {:.2e}'.format(epoch, Decimal(lr)))
         self.loss.start_log()
         self.model.train()
-
+        self.loader_train.dataset.set_scale(0)
         timer_data, timer_model = utility.timer(), utility.timer()
-        for batch, (lr, hr, _, idx_scale) in enumerate(self.loader_train):
+        for batch, (lr, hr, _) in enumerate(self.loader_train):
             lr, hr = self.prepare(lr, hr)
             _, _, outH, outW = hr.size()
 
@@ -52,7 +53,7 @@ class Trainer():
 
             # inference
             self.optimizer.zero_grad()
-            sr, sparsity = self.model(lr, idx_scale)
+            sr, sparsity = self.model(lr, idx_scale=0)
 
             # losses
             loss_SR = self.loss(sr, hr)
@@ -84,6 +85,7 @@ class Trainer():
 
         self.loss.end_log(len(self.loader_train))
         self.error_last = self.loss.log[-1, -1]
+        self.scheduler.step()
 
         target = self.model
         torch.save(
@@ -112,7 +114,7 @@ class Trainer():
                     if hasattr(m, '_prepare'):
                         m._prepare()
 
-                for idx_img, (lr, hr, filename, _) in enumerate(self.loader_test):
+                for idx_img, (lr, hr, filename) in enumerate(self.loader_test):
                     no_eval = (hr.nelement() == 1)
                     if not no_eval:
                         lr, hr = self.prepare(lr, hr)
