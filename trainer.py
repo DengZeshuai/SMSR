@@ -29,7 +29,8 @@ class Trainer():
         # self.scheduler.step()
         self.loss.step()
         epoch = self.scheduler.last_epoch + 1
-        lr = self.optimizer.get_lr()
+        # lr = self.optimizer.get_lr()
+        lr = self.scheduler.get_last_lr()[0]
 
         # lr schedule
         # lr = self.args.lr * (2 ** -(epoch // 200))
